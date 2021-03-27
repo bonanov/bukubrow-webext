@@ -8,6 +8,7 @@ import Data.String.Regex (Regex)
 
 foreign import matchAllFirstGroupsImpl :: Regex -> String -> Array String
 
+-- NB must be global regex
 matchAllFirstGroups :: Regex -> String -> Maybe (NonEmptyArray String)
 matchAllFirstGroups r = matchAllFirstGroupsImpl r >>> fromArray
 

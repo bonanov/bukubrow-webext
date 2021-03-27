@@ -1,3 +1,8 @@
+-- TODO
+-- stored in LS:
+--   schema version for bms, and bms. used by badge (can it not contact native messaging?)
+--   (not here yet) staged bookmarks. this makes sense
+
 module LocalStorage where
 
 import Prelude

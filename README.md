@@ -1,3 +1,5 @@
+TODO: https://github.com/purescript/spago#monorepo
+
 Bukubrow
 ===
 

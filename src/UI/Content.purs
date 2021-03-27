@@ -2,23 +2,24 @@ module UI.Content (content) where
 
 import Prelude
 
-import Bookmark (RemoteBookmark)
+import Bookmark (RemoteBookmark, local)
 import Bukubrow (HostFailure)
 import Capability.RemoteData (class RemoteData, checkConnection, getRemoteBookmarks)
 import Data.Array (length)
 import Data.Const (Const)
 import Data.Either (Either(..))
+import Data.FunctorWithIndex (mapWithIndex)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.Symbol (SProxy(..))
 import Halogen as H
 import Halogen.HTML.Events as HE
 import Halogen.HTML as HH
+import UI.Components.Bookmark (bookmark, Output)
 import UI.Components.Onboarding (onboarding)
 
-type OpaqueSlot = H.Slot (Const Void) Void
-
 type Slots =
-    ( onboardingSlot :: OpaqueSlot Unit
+    ( onboardingSlot :: H.Slot (Const Void) Void Unit
+    , bookmarkSlot :: H.Slot (Const Void) Output Int
     )
 
 data Bookmarks
@@ -60,6 +61,8 @@ render s = case s.bookmarks of
     Fetched res -> HH.div_
         [ case res of
             Left _    -> HH.slot (SProxy :: _ "onboardingSlot") unit onboarding unit (const Nothing)
-            Right bms -> HH.text <<< (_ <> " bms") <<< show <<< length $ bms
+            Right bms -> HH.div_ $ mapWithIndex (\i rembm ->
+                HH.slot (SProxy :: _ "bookmarkSlot") i bookmark { bookmark: local rembm } (\output -> Nothing)
+            ) bms
         ]
 
